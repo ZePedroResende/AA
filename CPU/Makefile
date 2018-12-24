@@ -7,12 +7,12 @@ SHELL = /bin/sh
 
 BIN_NAME = simple
 
-CXX = g++
-LD  = g++
+#CXX = g++
+#LD  = g++
 
 detected_OS := $(shell sh -c 'uname -s 2>/dev/null || echo not')
-#CXX = icpc
-#LD  = icpc
+CXX = icpc
+LD  = icpc
 
 #-fopenmp/-openmp for GNU/Intel
 ifeq ($(detected_OS),Darwin)
@@ -20,7 +20,8 @@ ifeq ($(detected_OS),Darwin)
 else
 	CXXFLAGS = -lpthread -fopenmp
 endif
-CXXFLAGS += -O3 -Wall -Wextra -std=c++11 -Wno-unused-parameter -pedantic -Werror 
+CXXFLAGS += -O3 -Wall -Wextra -std=c++11 -Wno-unused-parameter -pedantic -Werror -qopt-report=3 -qopt-report-phase=vec
+CXXFLAGS += -I/share/apps/papi/5.4.1/include -L/share/apps/papi/5.4.1/lib  -lpapi
 #CXXFLAGS = -O0 -g
 
 ifeq ($(DEBUG),yes)
@@ -72,4 +73,3 @@ all: checkdirs $(BIN_DIR)/$(BIN_NAME)
 
 clean:
 	rm -f $(BUILD_DIR)/* $(BIN_DIR)/*
-	rm images/out_*
